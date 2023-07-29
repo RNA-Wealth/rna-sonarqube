@@ -36,6 +36,7 @@ jobs:
           args: |
             helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube
             helm repo update
+            helm uninstall sonarqube -n sonarqube
             helm install -n sonarqube sonarqube sonarqube/sonarqube -f values.yaml
       # - name: Create vpn conf and ssh keys
       #   run: | 
