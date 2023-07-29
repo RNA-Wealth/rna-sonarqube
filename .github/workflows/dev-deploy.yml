@@ -36,7 +36,7 @@ jobs:
           args: |
             helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube
             helm repo update
-            helm install -n sonarqube sonarqube sonarqube/sonarqube -f values.yaml --force
+            helm install -n sonarqube sonarqube sonarqube/sonarqube -f values.yaml
       # - name: Create vpn conf and ssh keys
       #   run: | 
       #     echo ${{ secrets.DEV_OPENVPN_BASE64 }} | base64 -d > ./config.ovpn
