@@ -36,46 +36,5 @@ jobs:
           args: |
             helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube
             helm repo update
-            helm uninstall sonarqube -n sonarqube
             helm upgrade --install -n sonarqube sonarqube sonarqube/sonarqube -f values.yaml
-      # - name: Create vpn conf and ssh keys
-      #   run: | 
-      #     echo ${{ secrets.DEV_OPENVPN_BASE64 }} | base64 -d > ./config.ovpn
-      #     echo ${{ secrets.DEV_SSH_USER_PRIVATE_KEY_BASE64 }} | base64 -d > ./id_rsa
-      #     chmod 600 ./id_rsa
-      # - name: Install OpenVPN
-      #   run: |
-      #     sudo apt update
-      #     sudo apt install -y openvpn openvpn-systemd-resolved
-      # - name: Connect to VPN
-      #   uses: "kota65535/github-openvpn-connect-action@v2"
-      #   with:
-      #     config_file: ./config.ovpn
-      #     username: ${{ secrets.DEV_OPENVPN_USER }}
-      #     password: ${{ secrets.DEV_OPENVPN_PASSWORD }}
-      # - name: connect to dev
-      #   uses: appleboy/ssh-action@v0.1.10
-      #   with:
-      #     host: ${{ secrets.DEV_VM_HOST }}
-      #     username: ${{ secrets.DEV_SSH_USER }}
-      #     key_path: ./id_rsa
-      #     port: ${{ secrets.DEV_SSH_PORT }}
-      #     passphrase: ${{ secrets.DEV_SSH_PASSPHRASE }}
-      #     script: |
-      #       ls -al
-      #       hostname
-      #       curl dev-sonarqube.rna.lab
-      # - name: copy shell file
-      #   uses: canastro/copy-file-action@master
-      #   with:
-      #     source: "sonarqube.sh"
-      #     target: "rna-sonaruqbe/sonarqube.sh"
-      # - name: copy value yaml
-      #   uses: canastro/copy-file-action@master
-      #   with:
-      #     source: "values.yaml"
-      #     target: "rna-sonaruqbe/values.yaml"
-      # - name: run shell
-      #   run: |
-      #     ./rna-sonarqube/sonarqube.sh
           
