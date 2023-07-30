@@ -4,12 +4,9 @@ on:
   # Runs on pushes targeting the default branch
   push:
     branches: ['develop']
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -31,28 +28,12 @@ jobs:
           config_file: ./config.ovpn
           username: ${{ secrets.DEV_OPENVPN_USER }}
           password: ${{ secrets.DEV_OPENVPN_PASSWORD }}
-      - name: connect to dev
-        uses: appleboy/ssh-action@v0.1.10
+      - name: deploy to cluster
+        uses: wahyd4/kubectl-helm-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.DEV_KUBE_CONFIG_BASE64 }}
         with:
-          host: ${{ secrets.DEV_VM_HOST }}
-          username: ${{ secrets.DEV_SSH_USER }}
-          key_path: ./id_rsa
-          port: ${{ secrets.DEV_SSH_PORT }}
-          passphrase: ${{ secrets.DEV_SSH_PASSPHRASE }}
-          script: |
-            ls -al
-            hostname
-            curl dev-sonarqube.rna.lab
-      - name: copy shell file
-        uses: canastro/copy-file-action@master
-        with:
-          source: "sonarqube.sh"
-          target: "rna-sonaruqbe/sonarqube.sh"
-      - name: copy value yaml
-        uses: canastro/copy-file-action@master
-        with:
-          source: "values.yaml"
-          target: "rna-sonaruqbe/values.yaml"
-      - name: run shell
-        run: |
-          ./rna-sonarqube/sonarqube.sh
+          args: |
+            helm repo add sonarqube https://SonarSource.github.io/helm-chart-sonarqube
+            helm repo update
+            helm upgrade --install -n sonarqube sonarqube sonarqube/sonarqube -f values.yaml
